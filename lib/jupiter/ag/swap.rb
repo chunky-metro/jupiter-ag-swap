@@ -11,7 +11,7 @@ module Jupiter
     module Swap
       class Error < StandardError; end
 
-      BASE_URL = "https://quote-api.jup.ag/v6"
+      BASE_URL = "https://public.jupiterapi.com"
     end
   end
 end

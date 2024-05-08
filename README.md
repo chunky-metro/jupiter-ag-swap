@@ -2,7 +2,7 @@
 
 programmatically swap on the largest solana dex aggregator by adding this gem to your project
 
-## Installation
+## Install & Set up
 
 Install the gem and add to the application's Gemfile by executing:
 
@@ -12,9 +12,44 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
     $ gem install jupiter-ag-swap
 
+Set the SWAP_API_URL environment variable or the [default will be used](https://www.jupiterapi.com/):
+
+    $ export SWAP_API_URL=https://public.jupiterapi.com
+
 ## Usage
 
-WIP
+** Get a Quote **
+
+```ruby
+require 'jupiter/ag/swap/quote'
+
+response = Jupiter::Ag::Swap::Quote.get({
+  input_mint: 'So11111111111111111111111111111111111111112',
+  output_mint: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+  amount: 1000000,
+  slippage_bps: 1
+})
+```
+
+** Create a Swap **
+
+> Note: You'll need the (Solana gem)[https://github.com/bitzlato/ruby-solana] and (Base58 gem)[https://github.com/dougal/base58] to create wallets.
+
+```ruby
+require 'solana'
+require 'base58'
+require 'jupiter/ag/swap/swap'
+
+private_key = Base58.binary_from_base58(process.env['PRIVATE_KEY'] || '')
+keypair = Solana::Keypair.new(private_key: private_key)
+wallet = Solana::Wallet.new(keypair: keypair)
+
+swap = Jupiter::Ag::Swap::Swap.post({
+  quote_response: response['quoteResponse'],
+  userPublicKey: wallet.keypair.pubkey.to_base58,
+  wrapAndUnwrapSol: true
+})
+```
 
 ## Development
 
