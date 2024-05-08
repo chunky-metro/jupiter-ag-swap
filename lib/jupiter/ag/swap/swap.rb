@@ -4,9 +4,12 @@ require 'active_support/core_ext/hash'
 module Jupiter
   module Ag
     module Swap
-      class Quote
-        def self.get(**params)
-          HTTP.get(BASE_URL + "/quote", params: camelize_keys(params)).parse(:json)
+      class Swap
+        def self.post(**params)
+          params = camelize_keys(params)
+          raise "Missing `quoteResponse`" unless params["quoteResponse"]
+
+          HTTP.post(BASE_URL + "/swap", params: params).parse(:json)
         end
 
         private
